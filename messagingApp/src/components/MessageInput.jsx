@@ -1,0 +1,53 @@
+import { useState } from 'react'
+
+function MessageInput({ setMessages, isDark }) {
+	const [input, setInput] = useState('')
+
+	const handleSend = () => {
+		if (!input.trim()) {
+			return
+		}
+
+		const newMessage = {
+			id: Date.now(),
+			text: input,
+			sender: 'me',
+		}
+
+		setMessages((prev) => [...prev, newMessage])
+		setInput('')
+	}
+
+	return (
+		<div className={`border-t p-4 ${isDark ? 'border-slate-700 bg-slate-900' : 'border-gray-200 bg-white'}`}>
+			<div className="flex gap-2">
+				<input
+					type="text"
+					placeholder="Type a message..."
+					className={`flex-1 rounded-full border px-4 py-2 outline-none focus:border-blue-500 ${
+						isDark
+							? 'border-slate-600 bg-slate-800 text-slate-100 placeholder:text-slate-400'
+							: 'border-gray-300 bg-white text-gray-900 placeholder:text-gray-400'
+					}`}
+					value={input}
+					onChange={(event) => setInput(event.target.value)}
+					onKeyDown={(event) => {
+						if (event.key === 'Enter') {
+							handleSend()
+						}
+					}}
+				/>
+
+				<button
+					type="button"
+					onClick={handleSend}
+					className="rounded-full bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+				>
+					Send
+				</button>
+			</div>
+		</div>
+	)
+}
+
+export default MessageInput
