@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function MessageInput({ socket, myId, isDark }) {
+function MessageInput({ socket, myId, isDark, onSend, username }) {
 	const [input, setInput] = useState('')
 
 	const handleSend = () => {
@@ -9,10 +9,14 @@ function MessageInput({ socket, myId, isDark }) {
 		}
 
 		const newMessage = {
-			id: Date.now(),
-			text: input,
-			sender: myId,
+			content: input,
+			senderId: myId,
+			senderName: username || "Anonymous",
 			time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+		}
+
+		if (onSend) {
+			onSend({ ...newMessage, id: Date.now(), sender: 'me', text: newMessage.content })
 		}
 
 		socket.emit('send_message', newMessage)

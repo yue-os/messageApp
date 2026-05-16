@@ -6,10 +6,8 @@ const port = 3000;
 const dotenv = require('dotenv');	
 const Message = require("./models/Message")
 const mongoose = require('mongoose');
-const dns = require('node:dns')
 
 dotenv.config();
-dns.setServers(['8.8.8.8','1.1.1.1'])
 
 const app = express();
 app.use(cors());
@@ -19,7 +17,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
 	origin: '*',
-	methods: ['GET', 'POST', 'OPTIONS'],
+	methods: ['GET', 'POST'],
   },
 });
 
@@ -27,12 +25,32 @@ mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log('MongoDB connected'))
 .catch((err) => console.error('MongoDB connection error:', err));
 
+app.get('/messages', async (req, res) => {
+	try {
+		const messages = await Message.find().sort({ createdAt: -1 });
+		res.json(messages);
+	} catch (err) {
+		res.status(500).json({ error: 'Failed to fetch messages' });
+	}
+});
+
 io.on('connection', (socket) => {
   console.log('a user connected '  + socket.id);
 
-  socket.on('send_message', (msg) => {
-	console.log('message: ' + msg);
-	io.emit('receive_message', msg);
+  socket.on('send_message', async (msg) => {
+	try {
+		const savedMessage = await Message.create({
+			content: msg.content,
+			senderId: msg.senderId,
+			senderName: msg.senderName || "Anonymous",
+			time: msg.time
+		});
+		const messageData = savedMessage.toObject();
+		io.emit('receive_message', messageData);
+	} catch (err) {
+		console.error('Error saving message:', err);
+		socket.emit('message_error', { error: 'Failed to save message', details: err.message });
+	}
   });
 
 

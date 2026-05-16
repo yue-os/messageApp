@@ -1,4 +1,4 @@
-function ChatHeader({ isDark, onToggleTheme }) {
+function ChatHeader({ username, isDark, onToggleTheme }) {
 	return (
 		<header
 			className={`flex items-center justify-between border-b p-4 ${
@@ -6,7 +6,7 @@ function ChatHeader({ isDark, onToggleTheme }) {
 			}`}
 		>
 			<div className="flex flex-col items-start">
-				<h2 className={`text-lg font-bold ${isDark ? 'text-slate-100' : 'text-gray-800'}`}>John Doe</h2>
+				<h2 className={`text-lg font-bold ${isDark ? 'text-slate-100' : 'text-gray-800'}`}>{username}</h2>
 				<p className="text-sm text-green-500">Online</p>
 			</div>
 
