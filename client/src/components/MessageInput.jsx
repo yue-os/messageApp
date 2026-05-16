@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function MessageInput({ setMessages, isDark }) {
+function MessageInput({ socket, myId, isDark }) {
 	const [input, setInput] = useState('')
 
 	const handleSend = () => {
@@ -11,19 +11,21 @@ function MessageInput({ setMessages, isDark }) {
 		const newMessage = {
 			id: Date.now(),
 			text: input,
-			sender: 'me',
+			sender: myId,
+			time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 		}
 
-		setMessages((prev) => [...prev, newMessage])
+		socket.emit('send_message', newMessage)
 		setInput('')
 	}
 
 	return (
-		<div className={`border-t p-4 ${isDark ? 'border-slate-700 bg-slate-900' : 'border-gray-200 bg-white'}`}>
+		<footer className={`border-t p-4 ${isDark ? 'border-slate-700 bg-slate-900' : 'border-gray-200 bg-white'}`}>
 			<div className="flex gap-2">
 				<input
 					type="text"
 					placeholder="Type a message..."
+					aria-label="Message input"
 					className={`flex-1 rounded-full border px-4 py-2 outline-none focus:border-blue-500 ${
 						isDark
 							? 'border-slate-600 bg-slate-800 text-slate-100 placeholder:text-slate-400'
@@ -34,19 +36,18 @@ function MessageInput({ setMessages, isDark }) {
 					onKeyDown={(event) => {
 						if (event.key === 'Enter') {
 							handleSend()
-						}
+						} 
 					}}
 				/>
 
 				<button
 					type="button"
 					onClick={handleSend}
-					className="rounded-full bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-				>
+					className="rounded-full bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
 					Send
 				</button>
 			</div>
-		</div>
+		</footer>
 	)
 }
 

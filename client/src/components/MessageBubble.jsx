@@ -1,6 +1,6 @@
-function MessageBubble({ text, sender, isDark }) {
+function MessageBubble({ text, sender, time, isDark }) {
 	return (
-		<div className={`flex ${sender === 'me' ? 'justify-end' : 'justify-start'}`}>
+		<div className={`flex flex-col ${sender === 'me' ? 'items-end' : 'items-start'}`}>
 			<div
 				className={`max-w-xs rounded-2xl px-4 py-2 shadow-sm ${
 					sender === 'me'
@@ -12,6 +12,9 @@ function MessageBubble({ text, sender, isDark }) {
 			>
 				{text}
 			</div>
+			<p className={`mt-1 text-xs ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>
+				{time}
+			</p>
 		</div>
 	)
 }

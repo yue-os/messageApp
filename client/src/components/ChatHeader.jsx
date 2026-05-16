@@ -1,6 +1,6 @@
 function ChatHeader({ isDark, onToggleTheme }) {
 	return (
-		<div
+		<header
 			className={`flex items-center justify-between border-b p-4 ${
 				isDark ? 'border-slate-700 bg-slate-900' : 'border-gray-200 bg-white'
 			}`}
@@ -13,6 +13,7 @@ function ChatHeader({ isDark, onToggleTheme }) {
 			<button
 				type="button"
 				onClick={onToggleTheme}
+				aria-label="Toggle theme"
 				className={`rounded-full px-3 py-1.5 text-sm font-medium ${
 					isDark
 						? 'bg-slate-700 text-slate-100 hover:bg-slate-600'
@@ -21,7 +22,7 @@ function ChatHeader({ isDark, onToggleTheme }) {
 			>
 				{isDark ? 'Light' : 'Dark'}
 			</button>
-		</div>
+		</header>
 	)
 }
 
